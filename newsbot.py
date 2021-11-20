@@ -1,3 +1,4 @@
+from _typeshed import Self
 import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, messageentity, parsemode
 import telegram
@@ -141,8 +142,7 @@ def echo(update, context):
                    parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
     elif string_in == '/weather':
          curWeather = weather.GetWeather()
-         file = 'images\\back.jpg'
-         update.message.reply_photo(photo = open(file,'rb'))
+         update.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg','rb')
          keyboard = back_buttons()
          reply_markup = InlineKeyboardMarkup(keyboard)
          update.message.reply_text(text="<b>"+curWeather.description+'\nТекущая температура: '+str(curWeather.temperature)+'°\nДавление: '+str(curWeather.pressure)+'\nВлажность: '+ str(curWeather.humidity)+'%</b>', parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
