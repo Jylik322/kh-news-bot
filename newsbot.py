@@ -1,7 +1,11 @@
+from typing import Type
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, messageentity, parsemode
 import telegram
+from telegram import message
+from telegram.bot import Bot
 from telegram.constants import PARSEMODE_HTML
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext, MessageHandler, Filters
+from telegram.files.inputmedia import InputMedia, InputMediaPhoto
 from telegram.message import Message
 import parsing
 import weather
@@ -9,7 +13,6 @@ import payment
 reg_list = ["",""]
 account = 0
 condition = 0
-chat_id = 0
 check_strings = ["Your input is correct","Your input is empty","Parameter of command is not digit"]
 
 def is_number(a):
@@ -104,7 +107,6 @@ def button(update: Update, context: CallbackContext) -> None:
                    parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
     if query.data == 'weather':
         curWeather = weather.GetWeather()
-        file = r"C:\Users\jylik\Desktop\Python\images\back.jpg"
         update.callback_query.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
         keyboard = back_buttons()
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -139,8 +141,9 @@ def echo(update, context):
         update.message.reply_text(text='<b>Выберите интересующую вас рубрику с <a href="http://innovations.kh.ua/khnews/">нашего сайта</a></b>',
                    parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
     elif string_in == '/weather':
+         global photo
          curWeather = weather.GetWeather()
-         update.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
+         photo = update.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
          keyboard = back_buttons()
          reply_markup = InlineKeyboardMarkup(keyboard)
          update.message.reply_text(text="<b>"+curWeather.description+'\nТекущая температура: '+str(curWeather.temperature)+'°\nДавление: '+str(curWeather.pressure)+'\nВлажность: '+ str(curWeather.humidity)+'%</b>', parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
