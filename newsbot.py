@@ -1,5 +1,3 @@
-from _typeshed import Self
-import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, messageentity, parsemode
 import telegram
 from telegram.constants import PARSEMODE_HTML
@@ -107,7 +105,7 @@ def button(update: Update, context: CallbackContext) -> None:
     if query.data == 'weather':
         curWeather = weather.GetWeather()
         file = r"C:\Users\jylik\Desktop\Python\images\back.jpg"
-        update.callback_query.message.reply_photo(photo = open(file,'rb'))
+        update.callback_query.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
         keyboard = back_buttons()
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.callback_query.message.reply_text(text="<b>"+curWeather.description+'\nТекущая температура: '+str(curWeather.temperature)+'°\nДавление: '+str(curWeather.pressure)+'\nВлажность: '+ str(curWeather.humidity)+'%</b>', parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup)
@@ -142,7 +140,7 @@ def echo(update, context):
                    parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
     elif string_in == '/weather':
          curWeather = weather.GetWeather()
-         update.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg','rb')
+         update.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
          keyboard = back_buttons()
          reply_markup = InlineKeyboardMarkup(keyboard)
          update.message.reply_text(text="<b>"+curWeather.description+'\nТекущая температура: '+str(curWeather.temperature)+'°\nДавление: '+str(curWeather.pressure)+'\nВлажность: '+ str(curWeather.humidity)+'%</b>', parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
