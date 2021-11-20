@@ -1,3 +1,4 @@
+import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, messageentity, parsemode
 import telegram
 from telegram.constants import PARSEMODE_HTML
@@ -140,7 +141,7 @@ def echo(update, context):
                    parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
     elif string_in == '/weather':
          curWeather = weather.GetWeather()
-         file = r"C:\Users\jylik\Desktop\Python\images\back.jpg"
+         file = os.path.abspath(os.getcwd()+'\\images\\back.jpg')
          update.message.reply_photo(photo = open(file,'rb'))
          keyboard = back_buttons()
          reply_markup = InlineKeyboardMarkup(keyboard)
