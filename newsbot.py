@@ -141,7 +141,7 @@ def echo(update, context):
                    parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
     elif string_in == '/weather':
          curWeather = weather.GetWeather()
-         file = os.path.abspath(os.getcwd()+'\\images\\back.jpg')
+         file = 'images\\back.jpg'
          update.message.reply_photo(photo = open(file,'rb'))
          keyboard = back_buttons()
          reply_markup = InlineKeyboardMarkup(keyboard)
