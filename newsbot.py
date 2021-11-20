@@ -73,8 +73,8 @@ def start(update: Update, context: CallbackContext) -> None:
     reply_markup = InlineKeyboardMarkup(keyboard)
     keyboard2 = donate_button()
     reply2 = InlineKeyboardMarkup(keyboard2)
-    update.message.reply_text('<b><i>Добро пожаловать в бот KhNews!</i>\nТут вы можете посмотреть последние новости в Харькове, либо же просто посмотреть погоду</b>', reply_markup=reply_markup,parse_mode=telegram.ParseMode.HTML)
     update.message.reply_text('<b><i>Вы можете поддержать проект</i></b>', reply_markup=reply2,parse_mode=telegram.ParseMode.HTML)
+    update.message.reply_text('<b><i>Добро пожаловать в бот KhNews!</i>\nТут вы можете посмотреть последние новости в Харькове, либо же просто посмотреть погоду</b>', reply_markup=reply_markup,parse_mode=telegram.ParseMode.HTML)
 
 def ShowLastNews(update,context,head):
     posts = parsing.parse()
