@@ -15,10 +15,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Hi! Use /set <seconds> to set a timer')
-
-
 def alarm(context: CallbackContext) -> None:
     job = context.job
     context.bot.send_message(job.context, text='Beep!')
@@ -64,12 +60,6 @@ def main() -> None:
     updater = Updater("")
 
     dispatcher = updater.dispatcher
-
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", start))
-    dispatcher.add_handler(CommandHandler("set", set_timer))
-    dispatcher.add_handler(CommandHandler("unset", unset))
-
     updater.start_polling()
 
     updater.idle()

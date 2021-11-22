@@ -8,6 +8,7 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Callback
 from telegram.files.inputmedia import InputMedia, InputMediaPhoto
 from telegram.message import Message
 import parsing
+import time
 import weather
 import payment
 reg_list = ["",""]
@@ -160,6 +161,9 @@ def main() -> None:
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_handler(CommandHandler('help', help_command))
     updater.dispatcher.add_handler(MessageHandler(Filters.all, echo))
+    updater.dispatcher.add_handler(CommandHandler("set", time.set_timer))
+    updater.dispatcher.add_handler(CommandHandler("unset", time.unset))
+
 
     updater.start_polling()
     updater.idle()
