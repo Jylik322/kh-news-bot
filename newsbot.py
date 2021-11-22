@@ -89,10 +89,10 @@ def ShowLastNews(update,context,head):
             if post == postsWithHeadings[len(postsWithHeadings)-1]:
                 keyboard = back_buttons()
                 reply_markup = InlineKeyboardMarkup(keyboard)
-                update.callback_query.message.edit_text(text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n', 
+                update.callback_query.message.reply_text(text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n\n<i>'+post.post_Date+'</i>\n', 
                   parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup)
             else:
-                update.callback_query.message.edit_text(text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n', 
+                update.callback_query.message.reply_text(text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n\n<i>'+post.post_Date+'</i>\n', 
                   parse_mode=telegram.ParseMode.HTML)
            
 def button(update: Update, context: CallbackContext) -> None:

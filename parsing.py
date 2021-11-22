@@ -73,7 +73,7 @@ def get_content(html):
     news = []
     n =0
     for i in range(len(titles)):
-        news.append(Post(titles[n],dates[n],links[n],headings[i].strip(),descriptions[i]))
+        news.append(Post(titles[n],dates[n].strip(),links[n],headings[i].strip(),descriptions[i]))
         n+=1
     return news
     
