@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.cpython-39.pyc
+*.cpython-39
 *$py.class
 *.pyc
 
