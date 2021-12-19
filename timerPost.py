@@ -1,5 +1,7 @@
 
 from datetime import date, time
+
+from telegram.message import Message
 import newsbot
 import parsing
 import telegram
@@ -86,7 +88,7 @@ def infoSociety(context:CallbackContext) -> None:
                 context.bot.send_message(job.context,text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n\n<i>'+post.post_Date+'</i>\n', 
                   parse_mode=telegram.ParseMode.HTML)
 
-def daily(update: Update, context: CallbackContext,heading) -> None:
+def daily(update: Update, context: CallbackContext,heading) -> Message:
     chat_id = update.callback_query.message.chat_id
     b = time(11, 00, 00)
     if(heading == 'Главное'):
@@ -99,4 +101,4 @@ def daily(update: Update, context: CallbackContext,heading) -> None:
         context.job_queue.run_daily(infoSociety, b, context=chat_id, name=str(chat_id))
     keyboard = newsbot.back_buttons()
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.callback_query.message.reply_text('Теперь вы будете получать новости в 13:00 по Киеву. Тематика - '+heading,reply_markup=reply_markup)
+    return (update.callback_query.message.reply_text('Теперь вы будете получать новости в 13:00 по Киеву. Тематика - '+heading,reply_markup=reply_markup))

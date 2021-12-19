@@ -17,7 +17,7 @@ reg_list = ["",""]
 account = 0
 condition = 0
 check_strings = ["Your input is correct","Your input is empty","Parameter of command is not digit"]
-
+messages_list = []
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -72,13 +72,14 @@ def headingTimer_buttons():
     kb = [key_lst]
     return kb
 def start(update: Update, context: CallbackContext) -> None:
+    clear_message_history(update,context)
+
     keyboard = key_buttons()
     reply_markup = InlineKeyboardMarkup(keyboard)
     keyboard2 = donate_button()
     reply2 = InlineKeyboardMarkup(keyboard2)
-    update.message.reply_text('<b><i>Вы можете поддержать проект</i></b>', reply_markup=reply2,parse_mode=telegram.ParseMode.HTML)
-    update.message.reply_text('<b><i>Добро пожаловать в бот KhNews!</i>\nТут вы можете посмотреть последние новости в Харькове, либо же просто посмотреть погоду</b>', reply_markup=reply_markup,parse_mode=telegram.ParseMode.HTML)
-
+    messages_list.append(update.message.reply_text('<b><i>Вы можете поддержать проект</i></b>', reply_markup=reply2,parse_mode=telegram.ParseMode.HTML))
+    messages_list.append(update.message.reply_text('<b><i>Добро пожаловать в бот KhNews!</i>\nТут вы можете посмотреть последние новости в Харькове, либо же просто посмотреть погоду</b>', reply_markup=reply_markup,parse_mode=telegram.ParseMode.HTML))
 def ShowLastNews(update:Update,context:CallbackContext,head):
     posts = parsing.parse()
     postsWithHeadings = []
@@ -89,11 +90,13 @@ def ShowLastNews(update:Update,context:CallbackContext,head):
             if post == postsWithHeadings[len(postsWithHeadings)-1]:
                 keyboard = back_buttons()
                 reply_markup = InlineKeyboardMarkup(keyboard)
+                messages_list.append(
                 update.callback_query.message.reply_text(text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n\n<i>'+post.post_Date+'</i>\n', 
-                  parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup)
+                  parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup))
             else:
+                messages_list.append(
                 update.callback_query.message.reply_text(text='<a href="'+post.post_Link+'">'+post.post_Title+'</a>\n'+post.post_ShortDesc+'\n\n<i>'+post.post_Date+'</i>\n', 
-                  parse_mode=telegram.ParseMode.HTML)
+                  parse_mode=telegram.ParseMode.HTML))
  
 def button(update: Update, context: CallbackContext) -> None:
     global condition
@@ -101,23 +104,34 @@ def button(update: Update, context: CallbackContext) -> None:
     query.answer()
     print(query.data)
     if query.data == 'news':
+        clear_message_history(update,context)
+
         kb = heading_buttons()
         reply_markup = InlineKeyboardMarkup(kb)
-        update.callback_query.message.edit_text(text='<b>Выберите интересующую вас рубрику с <a href="http://innovations.kh.ua/khnews/">нашего сайта</a></b>',
-                   parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
+        messages_list.append(
+        update.callback_query.message.reply_text(text='<b>Выберите интересующую вас рубрику с <a href="http://innovations.kh.ua/khnews/">нашего сайта</a></b>',
+                   parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup))
                    
     if query.data == 'weather':
+        clear_message_history(update,context)
+
         curWeather = weather.GetWeather()
-        update.callback_query.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
+        messages_list.append(
+        update.callback_query.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg'))
         keyboard = back_buttons()
         reply_markup = InlineKeyboardMarkup(keyboard)
+        messages_list.append(
         update.callback_query.message.reply_text(text="<b>"+curWeather.description+'\nТекущая температура: '+str(curWeather.temperature)+'°\nДавление: '+str(curWeather.pressure)+'\nВлажность: '+ str(curWeather.humidity)+'%</b>', parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup)
-
+        )
     if query.data == 'back':
+        clear_message_history(update,context)
+
         keyboard = key_buttons()
         reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text(text='<b>Вы вернулись в главное меню!</b>',
-                  parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup)
+        messages_list.append(
+        query.message.reply_text(text='<b>Вы вернулись в главное меню!</b>',
+                  parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup))
+                  
     if query.data == 'donate':
         payment.start_without_shipping_callback(update,context,update.callback_query.message.chat_id)
     if query.data == 'Main':
@@ -129,37 +143,75 @@ def button(update: Update, context: CallbackContext) -> None:
     if query.data == 'Society':
         ShowLastNews(update,context,'Общество')
 
+
     if(query.data == 'subscribe'):
+        clear_message_history(update,context)
+
         keyboard = headingTimer_buttons()
         reply = InlineKeyboardMarkup(keyboard)
-        update.callback_query.message.reply_text('<b>Выбрать рубрику для подписки</b>', parse_mode=telegram.ParseMode.HTML,reply_markup=reply)
+        messages_list.append(
+        update.callback_query.message.reply_text('<b>Выбрать рубрику для подписки</b>', parse_mode=telegram.ParseMode.HTML,reply_markup=reply))
+
 
     if(query.data == 'DailyMain'):
-        timerPost.daily(update,context,'Главное')
+        messages_list.append(timerPost.daily(update,context,'Главное'))
     if(query.data == 'DailyCovid'):
-        timerPost.daily(update,context,'COVID')
+        messages_list.append(timerPost.daily(update,context,'COVID'))
     if(query.data == 'DailyEvents'):
-        timerPost.daily(update,context,'Мероприятия')
+        messages_list.append(timerPost.daily(update,context,'Мероприятия'))
     if(query.data == 'DailySociety'):
-        timerPost.daily(update,context,'Общество')
+        messages_list.append(timerPost.daily(update,context,'Общество'))
+
+
 
 def donate(update:Update,context:CallbackContext):
         payment.start_without_shipping_callback(update,context,update.message.chat_id)
+
+
+
 def postNews(update:Update,context:CallbackContext):
+        clear_message_history(update,context)
+
         kb = heading_buttons()
         reply_markup = InlineKeyboardMarkup(kb)
+        messages_list.append(
         update.message.reply_text(text='<b>Выберите интересующую вас рубрику с <a href="http://innovations.kh.ua/khnews/">нашего сайта</a></b>',
-                parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
+                parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup))
+
+
+
 def postWeahter(update:Update,context:CallbackContext):
          global photo
+         clear_message_history(update,context)
+
          curWeather = weather.GetWeather()
          photo = update.message.reply_photo('https://tvdownloaddw-a.akamaihd.net/stills/images/vdt_ru/2021/brus210408_001_kharkovbb_01v.jpg')
          keyboard = back_buttons()
          reply_markup = InlineKeyboardMarkup(keyboard)
+         messages_list.append(
          update.message.reply_text(text="<b>"+curWeather.description+'\nТекущая температура: '+str(curWeather.temperature)+'°\nДавление: '+str(curWeather.pressure)+'\nВлажность: '+ str(curWeather.humidity)+'%</b>', parse_mode=telegram.ParseMode.HTML, reply_markup=reply_markup)
+         )
+
+
+
+
 def help_command(update: Update, context: CallbackContext) -> None:
     """Displays info on how to use the bot."""
+    messages_list.append(
     update.message.reply_text("<b>/start</b> - Начать работу с новостным ботом\n<b>/news</b> - Получить последние новости\n<b>/weather</b> - Показать текущую погоду\n<b>/help</b> - Показать доступные команды",parse_mode=telegram.ParseMode.HTML)
+    )
+
+
+def clear_message_history(update: Update, context: CallbackContext) -> None:
+    chat_id = update.effective_chat.id
+
+    if update.message != None:
+        context.bot.delete_message(chat_id, update.message.message_id)
+
+    while len(messages_list) > 0:
+        message = messages_list.pop()
+        context.bot.delete_message(chat_id, message.message_id)
+
 
 def main() -> None:
     """Run the bot."""
