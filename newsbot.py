@@ -73,7 +73,6 @@ def headingTimer_buttons():
     return kb
 def start(update: Update, context: CallbackContext) -> None:
     clear_message_history(update,context)
-
     keyboard = key_buttons()
     reply_markup = InlineKeyboardMarkup(keyboard)
     keyboard2 = donate_button()
@@ -132,6 +131,7 @@ def button(update: Update, context: CallbackContext) -> None:
         query.message.reply_text(text='<b>Вы вернулись в главное меню!</b>',
                   parse_mode=telegram.ParseMode.HTML,reply_markup=reply_markup))
                   
+
     if query.data == 'donate':
         payment.start_without_shipping_callback(update,context,update.callback_query.message.chat_id)
     if query.data == 'Main':
@@ -142,6 +142,7 @@ def button(update: Update, context: CallbackContext) -> None:
         ShowLastNews(update,context,'Мероприятия')
     if query.data == 'Society':
         ShowLastNews(update,context,'Общество')
+
 
 
     if(query.data == 'subscribe'):
